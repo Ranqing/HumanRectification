@@ -65,37 +65,56 @@ int main(int argc, char * argv[])
     initUndistortRectifyMap(camera_matrix0, dist_coeffs0, R0, P0, imageSize, CV_32FC1, mapx0, mapy0);
     initUndistortRectifyMap(camera_matrix1, dist_coeffs1, R1, P1, imageSize, CV_32FC1, mapx1, mapy1);
 
-    int nframes = imageNames0.size();
+    int nframes ;
+
+    nframes = imageNames0.size();
     for(int i = 0; i < nframes; ++i)
     {
         string filename0 = imageFolder + "/" + cam0 + "/" + imageNames0[i];
-        string filename1 = imageFolder + "/" + cam1 + "/" + imageNames1[i];
         Mat view0 = imread(filename0, 1), new_view0;
-        Mat view1 = imread(filename1, 1), new_view1;
         if(view0.data == NULL)
         {
             cerr << "failed to open " << filename0 << endl;
             continue;
         }
+        remap(view0, new_view0, mapx0, mapy0, CV_INTER_LINEAR);
+
+        string savefn = outfolder0 + imageNames0[i];
+        imwrite(savefn, new_view0);
+        cout << i << '\t';
+        cout << savefn << endl;
+    }
+
+    nframes = imageNames1.size();
+    for(int i = 0; i < nframes; ++i)
+    {
+        string filename1 = imageFolder + "/" + cam1 + "/" + imageNames1[i];
+        Mat view1 = imread(filename1, 1), new_view1;
         if(view1.data == NULL)
         {
             cerr << "failed to open " << filename1 << endl;
             continue;
         }
-        remap(view0, new_view0, mapx0, mapy0, CV_INTER_LINEAR);
         remap(view1, new_view1, mapx1, mapy1, CV_INTER_LINEAR);
 
-        string savefn;
-        savefn = outfolder0 + imageNames0[i] ;
-        imwrite(savefn, new_view0);
-        savefn = outfolder1 + imageNames1[i] ;
+        string savefn = outfolder1 + imageNames1[i];
         imwrite(savefn, new_view1);
+        cout << i << '\t';
+        cout << savefn << endl;
+    }
 
+    //generate stereo_.info
+# if 0
+    nframes = min(imageNames0.size(), imageNames1.size());
+    for(int i = 0; i < nframes; ++i)
+    {
         cout << i << '\t';
         savefn =  infoFolder + "/" + cam0 + cam1 + "_" + int2FormatString(i, 4, '0') + ".info";
         cout << savefn << endl;
 
         qing_write_stereo_info(savefn, i, cam0, cam1, imageSize, Point2f(0.f,0.f), Point2f(0.f, 0.f), 240.0f, 0.f, Q);
-	}
+    }
+# endif
 
+    return 1;
 }
