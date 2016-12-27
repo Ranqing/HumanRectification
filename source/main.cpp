@@ -1,11 +1,11 @@
-#include "../../../Qing/qing_common.h"
-#include "../../../Qing/qing_dir.h"
-#include "../../../Qing/qing_io.h"
-#include "../../../Qing/qing_string.h"
+#include "../../Qing/qing_common.h"
+#include "../../Qing/qing_dir.h"
+#include "../../Qing/qing_io.h"
+#include "../../Qing/qing_string.h"
 
 int main(int argc, char * argv[])
 {
-    cout << "Usage: " << argv[0] << "../../../HumanDatas_20160711/Calib_Results ../../../HumanDatas_20160711/Humans A01 A02" << endl;
+    cout << "Usage: " << argv[0] << "../../../HumanDatas_20160711/Humans ../../../HumanDatas_20160711/Calib_Results A01 A02" << endl;
     cout << endl;
     if(argc < 5)
 	{
@@ -13,8 +13,8 @@ int main(int argc, char * argv[])
 		return 0; 
 	}
 
-    string calibFolder =  argv[1];
-    string imageFolder =  argv[2];
+    string imageFolder =  argv[1];
+    string calibFolder =  argv[2];
     cout << calibFolder << endl;
     cout << imageFolder << endl;
     string cam0 = argv[3];
@@ -92,7 +92,7 @@ int main(int argc, char * argv[])
         imwrite(savefn, new_view1);
 
         cout << i << '\t';
-        savefn =  infoFolder + "/" + cam0 + cam1 + "_" + int2FormatString(i, 2, '0') + ".info";
+        savefn =  infoFolder + "/" + cam0 + cam1 + "_" + int2FormatString(i, 4, '0') + ".info";
         cout << savefn << endl;
 
         qing_write_stereo_info(savefn, i, cam0, cam1, imageSize, Point2f(0.f,0.f), Point2f(0.f, 0.f), 240.0f, 0.f, Q);
