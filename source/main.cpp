@@ -105,13 +105,14 @@ int main(int argc, char * argv[])
 
     //generate stereo_.info
 # if 0
-    nframes = min(imageNames0.size(), imageNames1.size());
+    nframes = max(imageNames0.size(), imageNames1.size());
     for(int i = 0; i < nframes; ++i)
     {
         cout << i << '\t';
         savefn =  infoFolder + "/" + cam0 + cam1 + "_" + int2FormatString(i, 4, '0') + ".info";
         cout << savefn << endl;
 
+        //if the number of images in two stereo cameras are not the same, then this will be wrong
         qing_write_stereo_info(savefn, i, cam0, cam1, imageSize, Point2f(0.f,0.f), Point2f(0.f, 0.f), 240.0f, 0.f, Q);
     }
 # endif
